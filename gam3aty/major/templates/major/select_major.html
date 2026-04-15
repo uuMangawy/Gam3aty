@@ -1,0 +1,249 @@
+{% extends "base.html" %}
+
+{% block title %}Compare {{ base_major.name }} | Gam3aty{% endblock %}
+
+{% block content %}
+<style>
+    /* ===== SELECTION HEADER ===== */
+    .selection-header {
+        background: var(--white);
+        padding: 40px;
+        border-radius: 24px;
+        margin-bottom: 30px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+        border-left: 8px solid var(--accent);
+    }
+
+    .selection-header h2 {
+        font-size: 1.8rem;
+        font-weight: 800;
+        color: var(--dark);
+        margin-bottom: 5px;
+    }
+
+    .selection-header p {
+        color: var(--text-muted);
+        font-size: 1.1rem;
+    }
+
+    .base-major-pill {
+        display: inline-block;
+        background: var(--primary-light);
+        color: white;
+        padding: 4px 15px;
+        border-radius: 50px;
+        font-size: 0.9rem;
+        font-weight: 700;
+        margin-top: 10px;
+    }
+
+    /* ===== MODERN FILTER BAR ===== */
+    .filter-wrapper {
+        background: var(--white);
+        padding: 20px 30px;
+        border-radius: 100px; /* Pill shape */
+        box-shadow: var(--shadow);
+        margin-bottom: 40px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        border: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .filter-label {
+        font-weight: 700;
+        color: var(--primary);
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        white-space: nowrap;
+    }
+
+    .filter-form {
+        display: flex;
+        gap: 15px;
+        flex-grow: 1;
+    }
+
+    .custom-select {
+        flex: 1;
+        padding: 10px 15px;
+        border-radius: 50px;
+        border: 1px solid #e2e8f0;
+        background-color: #f8fafc;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--dark);
+        cursor: pointer;
+        transition: var(--transition);
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23004aad'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='C19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 15px center;
+        background-size: 15px;
+    }
+
+    .custom-select:hover, .custom-select:focus {
+        border-color: var(--primary);
+        outline: none;
+        background-color: #fff;
+    }
+
+    /* ===== SELECTION GRID ===== */
+    .selection-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 25px;
+    }
+
+    .select-card {
+        background: white;
+        border-radius: 20px;
+        overflow: hidden;
+        text-decoration: none;
+        transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        border: 1px solid rgba(0,0,0,0.05);
+        display: flex;
+        flex-direction: column;
+        position: relative;
+    }
+
+    .select-card:hover {
+        transform: translateY(-8px);
+        box-shadow: var(--hover-shadow);
+        border-color: var(--primary);
+    }
+
+    .img-box {
+        height: 160px;
+        overflow: hidden;
+    }
+
+    .img-box img {
+        width: 100%; height: 100%; object-fit: cover;
+    }
+
+    .card-body {
+        padding: 20px;
+        flex-grow: 1;
+    }
+
+    .card-body h3 {
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: var(--dark);
+        margin-bottom: 8px;
+    }
+
+    .major-meta {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+        line-height: 1.4;
+    }
+
+    .meta-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-bottom: 4px;
+    }
+
+    .compare-btn {
+        margin-top: 15px;
+        width: 100%;
+        padding: 12px;
+        border-radius: 12px;
+        background: var(--light-gray);
+        color: var(--primary);
+        font-weight: 700;
+        text-align: center;
+        transition: var(--transition);
+    }
+
+    .select-card:hover .compare-btn {
+        background: var(--primary);
+        color: white;
+    }
+
+    @media (max-width: 900px) {
+        .filter-wrapper { border-radius: 20px; flex-direction: column; align-items: flex-start; }
+        .filter-form { flex-direction: column; width: 100%; }
+    }
+</style>
+
+<div class="container" style="max-width: 1100px; margin: 30px auto;">
+
+    <div class="selection-header">
+        <h2>Comparison Tool ⚖️</h2>
+        <p>You are comparing with: <span class="base-major-pill">{{ base_major.name }}</span></p>
+    </div>
+
+    <div class="filter-wrapper">
+        <div class="filter-label">
+            <span>🔍 Filter By:</span>
+        </div>
+        <form method="GET" class="filter-form">
+            <select name="university" class="custom-select" onchange="this.form.submit()">
+                <option value="">All Universities</option>
+                {% for u in universities %}
+                    <option value="{{ u.id }}" {% if selected_university == u.id|stringformat:"s" %}selected{% endif %}>{{ u.name }}</option>
+                {% endfor %}
+            </select>
+
+            <select name="college" class="custom-select" onchange="this.form.submit()">
+                <option value="">All Colleges</option>
+                {% for c in colleges %}
+                    <option value="{{ c.id }}" {% if selected_college == c.id|stringformat:"s" %}selected{% endif %}>{{ c.name }}</option>
+                {% endfor %}
+            </select>
+
+            <select name="category" class="custom-select" onchange="this.form.submit()">
+                <option value="">All Categories</option>
+                {% for cat in categories %}
+                    <option value="{{ cat.id }}" {% if selected_category == cat.id|stringformat:"s" %}selected{% endif %}>{{ cat.name }}</option>
+                {% endfor %}
+            </select>
+        </form>
+    </div>
+
+    <div class="selection-grid">
+        {% for major in majors %}
+        <a href="{% url 'compare_major' base_major.id major.id %}" class="select-card">
+            
+            <div class="img-box">
+                {% if major.image %}
+                    <img src="{{ major.image.url }}" alt="{{ major.name }}">
+                {% elif major.college.image %}
+                    <img src="{{ major.college.image.url }}" alt="{{ major.college.name }}">
+                {% elif major.college.university.image %}
+                    <img src="{{ major.college.university.image.url }}" alt="{{ major.college.university.name }}">
+                {% else %}
+                    <div style="width:100%; height:100%; background:#f1f5f9; display:flex; align-items:center; justify-content:center; color:#cbd5e1; font-size: 2rem;">
+                        🏛️
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="card-body">
+                <h3>{{ major.name }}</h3>
+                
+                <div class="major-meta">
+                    <div class="meta-item">🏛️ <span>{{ major.college.university.name }}</span></div>
+                    <div class="meta-item">🏫 <span>{{ major.college.name }}</span></div>
+                </div>
+
+                <div class="compare-btn">
+                    Compare Now →
+                </div>
+            </div>
+        </a>
+        {% empty %}
+        <div style="grid-column: 1/-1; text-align:center; padding: 80px; background:white; border-radius: 24px;">
+            <p style="color: var(--text-muted); font-size: 1.2rem;">No matching majors found. Try changing your filters!</p>
+        </div>
+        {% endfor %}
+    </div>
+
+</div>
+{% endblock %}

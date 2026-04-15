@@ -1,0 +1,396 @@
+{% extends "base.html" %}
+
+{% block title %}{{ user.username }}'s Dashboard | Gam3aty{% endblock %}
+
+{% block content %}
+<style>
+    :root {
+        --profile-grad: linear-gradient(135deg, #004aad 0%, #0062e3 100%);
+        --glass: rgba(255, 255, 255, 0.95);
+        --transition-main: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .profile-wrapper {
+        max-width: 1100px;
+        margin: 40px auto;
+        padding: 0 20px;
+        animation: fadeIn 0.6s ease-out;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ===== PREMIUM HEADER ===== */
+    .profile-header {
+        background: var(--profile-grad);
+        color: white;
+        padding: 50px;
+        border-radius: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 30px;
+        box-shadow: 0 20px 40px rgba(0, 74, 173, 0.15);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .profile-header::before {
+        content: '';
+        position: absolute;
+        top: -20%;
+        left: -10%;
+        width: 300px;
+        height: 300px;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+        border-radius: 50%;
+    }
+
+    .profile-info {
+        display: flex;
+        align-items: center;
+        gap: 30px;
+        z-index: 2;
+    }
+
+    .avatar-main {
+        width: 120px;
+        height: 120px;
+        border-radius: 35px;
+        object-fit: cover;
+        background: white;
+        border: 4px solid rgba(255,255,255,0.2);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+
+    .profile-text h2 {
+        font-size: 2.2rem;
+        font-weight: 800;
+        margin: 0;
+        letter-spacing: -1px;
+    }
+
+    .user-badge {
+        background: rgba(255, 255, 255, 0.2);
+        padding: 4px 12px;
+        border-radius: 50px;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        font-weight: 800;
+        backdrop-filter: blur(5px);
+        margin-bottom: 10px;
+        display: inline-block;
+        letter-spacing: 1px;
+    }
+
+    /* ===== IMPROVED EDIT BUTTON ===== */
+    .edit-profile-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(12px);
+        color: white;
+        padding: 14px 28px;
+        border-radius: 18px;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 0.95rem;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        transition: var(--transition-main);
+        z-index: 5;
+    }
+
+    .edit-profile-btn:hover {
+        background: white;
+        color: #004aad;
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+    }
+
+    .edit-profile-btn span.icon {
+        transition: transform 0.4s ease;
+    }
+
+    .edit-profile-btn:hover span.icon {
+        transform: rotate(15deg) scale(1.2);
+    }
+
+    /* ===== QUICK STATS ===== */
+    .stats-row {
+        display: flex;
+        gap: 20px;
+        margin-bottom: 40px;
+    }
+
+    .stat-card {
+        background: white;
+        flex: 1;
+        padding: 22px;
+        border-radius: 22px;
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+        border: 1px solid #f1f5f9;
+        transition: transform 0.3s ease;
+    }
+
+    .stat-card:hover { transform: translateY(-5px); }
+
+    .stat-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.3rem;
+    }
+
+    /* ===== DASHBOARD CONTENT ===== */
+    .dashboard-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 30px;
+    }
+
+    .fav-section {
+        background: var(--glass);
+        border-radius: 26px;
+        padding: 28px;
+        border: 1px solid #f1f5f9;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.03);
+    }
+
+    .section-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 22px;
+    }
+
+    .section-head h3 {
+        font-size: 1.2rem;
+        font-weight: 800;
+        color: #1e293b;
+        margin: 0;
+    }
+
+    .count-badge {
+        background: #f1f5f9;
+        color: #004aad;
+        padding: 4px 12px;
+        border-radius: 10px;
+        font-weight: 800;
+        font-size: 0.85rem;
+    }
+
+    .scroll-area {
+        max-height: 420px;
+        overflow-y: auto;
+        padding-right: 8px;
+    }
+
+    .scroll-area::-webkit-scrollbar { width: 5px; }
+    .scroll-area::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
+
+    .item-card {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 15px;
+        border-radius: 20px;
+        background: #f8fafc;
+        margin-bottom: 12px;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        border: 1px solid transparent;
+    }
+
+    .item-card:hover {
+        background: white;
+        transform: translateX(8px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.04);
+        border-color: #cbd5e1;
+    }
+
+    .item-card img, .placeholder-icon {
+        width: 56px;
+        height: 56px;
+        border-radius: 16px;
+        object-fit: cover;
+    }
+
+    .placeholder-icon {
+        background: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.6rem;
+    }
+
+    .item-meta b {
+        display: block;
+        color: #1e293b;
+        font-size: 1rem;
+        margin-bottom: 2px;
+    }
+
+    .item-meta span {
+        font-size: 0.8rem;
+        color: #64748b;
+        font-weight: 600;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 40px 20px;
+        color: #94a3b8;
+        font-size: 0.9rem;
+        border: 2px dashed #e2e8f0;
+        border-radius: 20px;
+    }
+
+    @media (max-width: 768px) {
+        .profile-header { flex-direction: column; text-align: center; padding: 40px 20px; gap: 25px; }
+        .profile-info { flex-direction: column; }
+        .stats-row { flex-direction: column; }
+        .edit-profile-btn { width: 100%; justify-content: center; }
+    }
+</style>
+
+<div class="profile-wrapper">
+    <header class="profile-header">
+        <div class="profile-info">
+            <div class="avatar-container">
+                {% if user.profile.image %}
+                    <img src="{{ user.profile.image.url }}" class="avatar-main">
+                {% else %}
+                    <div class="avatar-main" style="display:flex; align-items:center; justify-content:center; font-size:3.5rem;">👤</div>
+                {% endif %}
+            </div>
+            <div class="profile-text">
+                <span class="user-badge">Verified Student</span>
+                <h2>{{ user.username }}</h2>
+                <p style="opacity: 0.9; margin-top: 8px; font-size: 1rem; max-width: 450px; line-height: 1.5;">
+                    {{ user.profile.bio|default:"Exploration is the engine of sets. Start saving your favorite Egyptian universities today." }}
+                </p>
+            </div>
+        </div>
+        
+        <a href="{% url 'profile_update' %}" class="edit-profile-btn">
+            <span class="icon">✏️</span>
+            <span>Edit Profile</span>
+        </a>
+    </header>
+
+    <div class="stats-row">
+        <div class="stat-card">
+            <div class="stat-icon" style="background: #eef2ff; color: #4f46e5;">🏛️</div>
+            <div>
+                <div style="font-weight: 800; font-size: 1.3rem;">{{ fav_universities|length }}</div>
+                <div style="font-size: 0.7rem; color: #64748b; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">Universities</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon" style="background: #fff7ed; color: #f97316;">🏫</div>
+            <div>
+                <div style="font-weight: 800; font-size: 1.3rem;">{{ fav_colleges|length }}</div>
+                <div style="font-size: 0.7rem; color: #64748b; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">Colleges</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon" style="background: #f0fdf4; color: #16a34a;">🎓</div>
+            <div>
+                <div style="font-weight: 800; font-size: 1.3rem;">{{ fav_majors|length }}</div>
+                <div style="font-size: 0.7rem; color: #64748b; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">Majors</div>
+            </div>
+        </div>
+    </div>
+
+    <main class="dashboard-grid">
+        
+        <section class="fav-section">
+            <div class="section-head">
+                <h3>🏛️ Universities</h3>
+                <span class="count-badge">{{ fav_universities|length }}</span>
+            </div>
+            <div class="scroll-area">
+                {% for f in fav_universities %}
+                <a href="{% url 'university' f.university.id %}" class="item-card">
+                    {% if f.university.image %}
+                        <img src="{{ f.university.image.url }}" alt="{{ f.university.name }}">
+                    {% else %}
+                        <div class="placeholder-icon">🏛️</div>
+                    {% endif %}
+                    <div class="item-meta">
+                        <b>{{ f.university.name }}</b>
+                        <span>Egypt</span>
+                    </div>
+                </a>
+                {% empty %}
+                <div class="empty-state">No universities saved yet.</div>
+                {% endfor %}
+            </div>
+        </section>
+
+        <section class="fav-section">
+            <div class="section-head">
+                <h3>🏫 Colleges</h3>
+                <span class="count-badge">{{ fav_colleges|length }}</span>
+            </div>
+            <div class="scroll-area">
+                {% for f in fav_colleges %}
+                <a href="{% url 'college' f.college.id %}" class="item-card">
+                    {% if f.college.image %}
+                        <img src="{{ f.college.image.url }}" alt="{{ f.college.name }}">
+                    {% elif f.college.university.image %}
+                        <img src="{{ f.college.university.image.url }}" alt="{{ f.college.name }}">
+                    {% else %}
+                        <div class="placeholder-icon">🏫</div>
+                    {% endif %}
+                    <div class="item-meta">
+                        <b>{{ f.college.name }}</b>
+                        <span>{{ f.college.university.name|truncatechars:25 }}</span>
+                    </div>
+                </a>
+                {% empty %}
+                <div class="empty-state">No colleges added yet.</div>
+                {% endfor %}
+            </div>
+        </section>
+
+        <section class="fav-section">
+            <div class="section-head">
+                <h3>🎓 Majors</h3>
+                <span class="count-badge">{{ fav_majors|length }}</span>
+            </div>
+            <div class="scroll-area">
+                {% for f in fav_majors %}
+                <a href="{% url 'major' f.major.id %}" class="item-card">
+                    {% if f.major.image %}
+                        <img src="{{ f.major.image.url }}" alt="{{ f.major.name }}">
+                    {% elif f.major.college.image %}
+                         <img src="{{ f.major.college.image.url }}" alt="{{ f.major.name }}">
+                    {% elif f.major.college.university.image %}
+                        <img src="{{ f.major.college.university.image.url }}" alt="{{ f.major.name }}">
+                    {% else %}
+                        <div class="placeholder-icon">🎓</div>
+                    {% endif %}
+                    <div class="item-meta">
+                        <b>{{ f.major.name }}</b>
+                        <span>{{ f.major.college.name|truncatechars:25 }}</span>
+                    </div>
+                </a>
+                {% empty %}
+                <div class="empty-state">No majors added yet.</div>
+                {% endfor %}
+            </div>
+        </section>
+
+    </main>
+</div>
+{% endblock %}

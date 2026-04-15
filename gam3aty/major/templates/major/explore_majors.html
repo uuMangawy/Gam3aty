@@ -1,0 +1,232 @@
+{% extends "base.html" %}
+
+{% block title %}Explore All Majors | Gam3aty{% endblock %}
+
+{% block content %}
+<style>
+    /* ===== FLOATING FILTER BAR ===== */
+    .filter-container {
+        max-width: 1000px;
+        margin: 0 auto 40px;
+        position: relative;
+        z-index: 10;
+    }
+
+    .filter-glass {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        padding: 25px;
+        border-radius: 20px;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        border: 1px solid white;
+    }
+
+    .filter-input-wrapper {
+        flex: 2;
+        min-width: 250px;
+        position: relative;
+    }
+
+    .filter-input-wrapper input {
+        width: 100%;
+        padding: 14px 20px 14px 45px;
+        border-radius: 12px;
+        border: 1px solid #e2e8f0;
+        background: #f8fafc;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .filter-input-wrapper::before {
+        content: "🔍";
+        position: absolute;
+        left: 18px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 1.1rem;
+        opacity: 0.5;
+    }
+
+    .filter-select {
+        flex: 1;
+        min-width: 160px;
+        padding: 12px 15px;
+        border-radius: 12px;
+        border: 1px solid #e2e8f0;
+        background-color: white;
+        font-size: 0.9rem;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    /* ===== RESULTS GRID ===== */
+    .explore-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 25px;
+    }
+
+    .major-card {
+        background: white;
+        border-radius: 20px;
+        overflow: hidden;
+        border: 1px solid rgba(0,0,0,0.05);
+        transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        display: flex;
+        flex-direction: column;
+    }
+
+    .major-card:hover {
+        transform: translateY(-10px);
+        box-shadow: var(--hover-shadow);
+    }
+
+    .card-img-wrap {
+        height: 180px;
+        position: relative;
+    }
+
+    .card-img-wrap img { width: 100%; height: 100%; object-fit: cover; }
+
+    .uni-badge {
+        position: absolute;
+        bottom: 12px;
+        left: 12px;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(5px);
+        color: white;
+        padding: 4px 10px;
+        border-radius: 6px;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+
+    .card-body {
+        padding: 20px;
+        flex-grow: 1;
+    }
+
+    .major-type {
+        color: var(--primary);
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        font-weight: 800;
+        letter-spacing: 1px;
+        margin-bottom: 5px;
+        display: block;
+    }
+
+    .card-body h3 {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--dark);
+        margin-bottom: 10px;
+        line-height: 1.3;
+    }
+
+    .location-info {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+        display: flex;
+        align-items: flex-start;
+        gap: 6px;
+    }
+
+    .card-footer {
+        padding: 15px 20px;
+        background: #fcfdfe;
+        border-top: 1px solid #f1f5f9;
+    }
+
+    .btn-details {
+        display: block;
+        text-align: center;
+        background: var(--light-gray);
+        color: var(--primary);
+        padding: 10px;
+        border-radius: 10px;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 0.9rem;
+        transition: 0.3s;
+    }
+
+    .major-card:hover .btn-details {
+        background: var(--primary);
+        color: white;
+    }
+
+    @media (max-width: 768px) {
+        .search-hero { padding: 40px 20px; }
+        .filter-glass { border-radius: 15px; padding: 15px; }
+    }
+</style>
+
+<div class="filter-container">
+    <form method="GET" class="filter-glass">
+        <select name="university" class="filter-select" onchange="this.form.submit()">
+            <option value="">All Universities</option>
+            {% for u in universities %}
+                <option value="{{ u.id }}" {% if selected_university == u.id|stringformat:"s" %}selected{% endif %}>{{ u.name }}</option>
+            {% endfor %}
+        </select>
+
+        <select name="college" class="filter-select" onchange="this.form.submit()">
+            <option value="">All Colleges</option>
+            {% for c in colleges %}
+                <option value="{{ c.id }}" {% if selected_college == c.id|stringformat:"s" %}selected{% endif %}>{{ c.name }}</option>
+            {% endfor %}
+        </select>
+
+        <select name="category" class="filter-select" onchange="this.form.submit()">
+            <option value="">All Categories</option>
+            {% for cat in categories %}
+                <option value="{{ cat.id }}" {% if selected_category == cat.id|stringformat:"s" %}selected{% endif %}>{{ cat.name }}</option>
+            {% endfor %}
+        </select>
+    </form>
+</div>
+
+<div class="container" style="max-width: 1200px; margin-bottom: 60px;">
+    <div class="explore-grid">
+        {% for major in majors %}
+        <div class="major-card">
+            <div class="card-img-wrap">
+                {% if major.image %}
+                    <img src="{{ major.image.url }}" alt="{{ major.name }}">
+                {% elif major.college.image %}
+                    <img src="{{ major.college.image.url }}" alt="{{ major.name }}">
+                {% else %}
+                    <img src="{{ major.college.university.image.url }}" alt="{{ major.name }}">
+                {% endif %}
+                <div class="uni-badge">{{ major.college.university.name }}</div>
+            </div>
+
+            <div class="card-body">
+                <span class="major-type">Full-Time Program</span>
+                <h3>{{ major.name }}</h3>
+                <div class="location-info">
+                    <span>📍</span>
+                    <span>{{ major.college.name }}</span>
+                </div>
+            </div>
+
+            <div class="card-footer">
+                <a href="{% url 'major' major.id %}" class="btn-details">
+                    Explore Program →
+                </a>
+            </div>
+        </div>
+        {% empty %}
+        <div style="grid-column: 1/-1; text-align: center; padding: 60px; background: white; border-radius: 20px;">
+            <span style="font-size: 3rem;">🔎</span>
+            <h3 style="margin-top: 15px; color: var(--dark);">No results matched your search</h3>
+            <p style="color: var(--text-muted);">Try broadening your filters or using different keywords.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

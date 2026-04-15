@@ -1,0 +1,222 @@
+{% extends "base.html" %}
+
+{% block title %}Create Account | Gam3aty{% endblock %}
+
+{% block content %}
+<style>
+    /* ===== AUTH LAYOUT ===== */
+    .auth-wrapper {
+        min-height: 80vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    .auth-box {
+        max-width: 450px;
+        width: 100%;
+        background: var(--white);
+        padding: 40px;
+        border-radius: 24px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.05);
+        border: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .auth-box h2 {
+        text-align: center;
+        color: var(--dark);
+        font-weight: 800;
+        font-size: 1.8rem;
+        margin-bottom: 8px;
+    }
+
+    .auth-subtitle {
+        text-align: center;
+        color: var(--text-muted);
+        font-size: 0.95rem;
+        margin-bottom: 30px;
+    }
+
+    /* ===== FORM STYLING ===== */
+    .form-group {
+        margin-bottom: 18px;
+    }
+
+    .auth-box label {
+        font-weight: 700;
+        display: block;
+        margin-bottom: 8px;
+        font-size: 0.85rem;
+        color: var(--primary);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    /* Targeting Django's auto-generated inputs */
+    .auth-box input {
+        width: 100%;
+        padding: 12px 16px;
+        border-radius: 12px;
+        border: 1px solid #e2e8f0;
+        background: #f8fafc;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        outline: none;
+    }
+
+    .auth-box input:focus {
+        border-color: var(--primary);
+        background: #fff;
+        box-shadow: 0 0 0 4px rgba(0, 74, 173, 0.1);
+    }
+
+    /* ===== ERROR HANDLING ===== */
+    .error-list {
+        list-style: none;
+        padding: 0;
+        margin: 5px 0 0 0;
+    }
+
+    .error-item {
+        color: #ef4444;
+        font-size: 0.8rem;
+        font-weight: 600;
+        margin-top: 4px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .error-box {
+        background: #fef2f2;
+        padding: 15px;
+        border-radius: 12px;
+        border-left: 4px solid #ef4444;
+        margin-bottom: 20px;
+    }
+
+    .error-box p {
+        color: #b91c1c;
+        font-size: 0.85rem;
+        margin: 0;
+        font-weight: 600;
+    }
+
+    /* ===== BUTTONS ===== */
+    .btn-register {
+        width: 100%;
+        padding: 14px;
+        background: var(--primary);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-size: 1rem;
+        font-weight: 700;
+        cursor: pointer;
+        margin-top: 10px;
+        transition: transform 0.2s, background 0.2s, box-shadow 0.2s;
+    }
+
+    .btn-register:hover {
+        background: var(--primary-dark);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 74, 173, 0.3);
+    }
+
+    .btn-register:active {
+        transform: translateY(0);
+    }
+
+    .small-text {
+        text-align: center;
+        margin-top: 25px;
+        font-size: 0.9rem;
+        color: var(--text-muted);
+    }
+
+    .small-text a {
+        color: var(--primary);
+        text-decoration: none;
+        font-weight: 700;
+    }
+
+    .small-text a:hover {
+        text-decoration: underline;
+    }
+</style>
+
+<div class="auth-wrapper">
+    <div class="auth-box">
+        <h2>Join Gam3aty</h2>
+        <p class="auth-subtitle">Create an account to save your favorite majors and compare universities.</p>
+
+        {% if form.non_field_errors %}
+            <div class="error-box">
+                {% for error in form.non_field_errors %}
+                    <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="{{ form.username.id_for_label }}">Username</label>
+                {{ form.username }}
+                {% if form.username.errors %}
+                    <div class="error-list">
+                        {% for error in form.username.errors %}
+                            <span class="error-item">⚠️ {{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.email.id_for_label }}">Email Address</label>
+                {{ form.email }}
+                {% if form.email.errors %}
+                    <div class="error-list">
+                        {% for error in form.email.errors %}
+                            <span class="error-item">⚠️ {{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.password1.id_for_label }}">Password</label>
+                {{ form.password1 }}
+                {% if form.password1.errors %}
+                    <div class="error-list">
+                        {% for error in form.password1.errors %}
+                            <span class="error-item">⚠️ {{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.password2.id_for_label }}">Confirm Password</label>
+                {{ form.password2 }}
+                {% if form.password2.errors %}
+                    <div class="error-list">
+                        {% for error in form.password2.errors %}
+                            <span class="error-item">⚠️ {{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <button type="submit" class="btn-register">Create Account</button>
+        </form>
+
+        <div class="small-text">
+            Already a member?
+            <a href="{% url 'login' %}">Sign In</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
