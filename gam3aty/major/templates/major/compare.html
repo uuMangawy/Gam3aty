@@ -1,246 +1,93 @@
 {% extends "base.html" %}
-
-{% block title %}Comparison | {{ major1.name }} vs {{ major2.name }}{% endblock %}
+{% block title %}{{ major1.name }} vs {{ major2.name }} | Gam3aty{% endblock %}
 
 {% block content %}
-<style>
-    /* ===== COMPARISON HERO ===== */
-    .compare-hero {
-        background: var(--white);
-        border-radius: 24px;
-        overflow: hidden;
-        margin-bottom: 40px;
-        box-shadow: var(--shadow);
-        border: 1px solid rgba(0,0,0,0.05);
-    }
+<div class="page-narrow">
 
-    .hero-split {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        position: relative;
-    }
+    <nav class="breadcrumbs" aria-label="Breadcrumb">
+        <a href="{% url 'explore_majors' %}">Majors</a>
+        <span class="sep" aria-hidden="true">/</span>
+        <span aria-current="page">Comparison</span>
+    </nav>
 
-    .hero-item {
-        position: relative;
-        height: 300px;
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-end;
-        padding: 30px;
-        color: white;
-    }
-
-    .hero-item img {
-        position: absolute;
-        inset: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        z-index: 1;
-    }
-
-    .hero-item::after {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(to top, rgba(0,0,0,0.8) 10%, transparent 100%);
-        z-index: 2;
-    }
-
-    .hero-text {
-        position: relative;
-        z-index: 3;
-    }
-
-    .hero-text span {
-        font-size: 0.8rem;
-        text-transform: uppercase;
-        font-weight: 700;
-        letter-spacing: 1px;
-        color: var(--accent);
-    }
-
-    .hero-text h3 { font-size: 1.8rem; font-weight: 800; }
-
-    /* VS Badge */
-    .vs-badge {
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
-        width: 60px;
-        height: 60px;
-        background: var(--white);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: 900;
-        color: var(--primary);
-        z-index: 10;
-        box-shadow: 0 0 20px rgba(0,0,0,0.2);
-        border: 4px solid var(--primary-light);
-    }
-
-    /* ===== COMPARISON DATA GRID ===== */
-    .data-grid {
-        background: white;
-        border-radius: 24px;
-        overflow: hidden;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.03);
-    }
-
-    .data-row {
-        display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
-        border-bottom: 1px solid #f1f5f9;
-        transition: var(--transition);
-    }
-
-    .data-row:hover { background: #f8fafc; }
-
-    .data-label {
-        background: #f8fafc;
-        padding: 20px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: 700;
-        color: var(--text-muted);
-        text-transform: uppercase;
-        font-size: 0.75rem;
-        letter-spacing: 0.5px;
-        border-right: 1px solid #f1f5f9;
-    }
-
-    .data-cell {
-        padding: 20px;
-        text-align: center;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        font-weight: 600;
-        color: var(--dark);
-    }
-
-    .data-cell.highlight {
-        color: var(--primary);
-        font-size: 1.1rem;
-        font-weight: 800;
-    }
-
-    .category-chips {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 6px;
-        justify-content: center;
-    }
-
-    .chip {
-        background: #eef2ff;
-        color: var(--primary);
-        padding: 4px 10px;
-        border-radius: 50px;
-        font-size: 0.75rem;
-    }
-
-    /* ===== FOOTER ACTIONS ===== */
-    .action-bar {
-        margin-top: 30px;
-        display: flex;
-        justify-content: center;
-        gap: 15px;
-    }
-
-    .btn-outline {
-        padding: 12px 25px;
-        border-radius: 50px;
-        border: 2px solid var(--primary);
-        color: var(--primary);
-        text-decoration: none;
-        font-weight: 700;
-        transition: var(--transition);
-    }
-
-    .btn-outline:hover {
-        background: var(--primary);
-        color: white;
-    }
-
-    @media (max-width: 768px) {
-        .hero-split { grid-template-columns: 1fr; }
-        .data-row { grid-template-columns: 1fr; }
-        .data-label { border-right: none; border-bottom: 1px solid #eee; }
-        .vs-badge { display: none; }
-    }
-</style>
-
-<div class="container" style="max-width: 1000px; margin: 40px auto;">
+    <header class="text-center mb-8">
+        <span class="eyebrow">Side-by-side</span>
+        <h1>Compare two majors</h1>
+        <p class="text-muted">Quickly see how these programs stack up.</p>
+    </header>
 
     <div class="compare-hero">
-        <div class="hero-split">
-            <div class="vs-badge">VS</div>
-            
-            <div class="hero-item">
-                {% if major1.image %}<img src="{{ major1.image.url }}">
-                {% else %}<div style="position:absolute; inset:0; background:var(--primary);"></div>{% endif %}
-                <div class="hero-text">
-                    <span>Option A</span>
-                    <h3>{{ major1.name }}</h3>
-                </div>
+        <div class="compare-split">
+            <div class="vs-badge" aria-hidden="true">VS</div>
+
+            <div class="compare-side">
+                {% if major1.image %}
+                    <img src="{{ major1.image.url }}" alt="{{ major1.name }}">
+                {% elif major1.college.image %}
+                    <img src="{{ major1.college.image.url }}" alt="{{ major1.name }}">
+                {% elif major1.college.university.image %}
+                    <img src="{{ major1.college.university.image.url }}" alt="{{ major1.name }}">
+                {% else %}
+                    <div style="position:absolute; inset:0; background: var(--gradient-primary); z-index: -2;"></div>
+                {% endif %}
+                <span class="eyebrow">Option A</span>
+                <h3>{{ major1.name }}</h3>
             </div>
 
-            <div class="hero-item">
-                {% if major2.image %}<img src="{{ major2.image.url }}">
-                {% else %}<div style="position:absolute; inset:0; background:var(--dark);"></div>{% endif %}
-                <div class="hero-text">
-                    <span>Option B</span>
-                    <h3>{{ major2.name }}</h3>
-                </div>
+            <div class="compare-side">
+                {% if major2.image %}
+                    <img src="{{ major2.image.url }}" alt="{{ major2.name }}">
+                {% elif major2.college.image %}
+                    <img src="{{ major2.college.image.url }}" alt="{{ major2.name }}">
+                {% elif major2.college.university.image %}
+                    <img src="{{ major2.college.university.image.url }}" alt="{{ major2.name }}">
+                {% else %}
+                    <div style="position:absolute; inset:0; background: var(--slate-800); z-index: -2;"></div>
+                {% endif %}
+                <span class="eyebrow">Option B</span>
+                <h3>{{ major2.name }}</h3>
             </div>
         </div>
     </div>
 
-    <div class="data-grid">
-        
-        <div class="data-row">
-            <div class="data-label">University</div>
-            <div class="data-cell">{{ major1.college.university.name }}</div>
-            <div class="data-cell">{{ major2.college.university.name }}</div>
+    <div class="compare-table" role="table" aria-label="Major comparison">
+        <div class="compare-row" role="row">
+            <div class="compare-row-label" role="rowheader">University</div>
+            <div class="compare-row-cell" role="cell">{{ major1.college.university.name }}</div>
+            <div class="compare-row-cell" role="cell">{{ major2.college.university.name }}</div>
         </div>
-
-        <div class="data-row">
-            <div class="data-label">College</div>
-            <div class="data-cell">{{ major1.college.name }}</div>
-            <div class="data-cell">{{ major2.college.name }}</div>
+        <div class="compare-row" role="row">
+            <div class="compare-row-label" role="rowheader">College</div>
+            <div class="compare-row-cell" role="cell">{{ major1.college.name }}</div>
+            <div class="compare-row-cell" role="cell">{{ major2.college.name }}</div>
         </div>
-
-        <div class="data-row">
-            <div class="data-label">Fees (Per Term)</div>
-            <div class="data-cell highlight">${{ major1.fees_per_term }}</div>
-            <div class="data-cell highlight">${{ major2.fees_per_term }}</div>
+        <div class="compare-row" role="row">
+            <div class="compare-row-label" role="rowheader">Fees / term</div>
+            <div class="compare-row-cell highlight" role="cell">${{ major1.fees_per_term }}</div>
+            <div class="compare-row-cell highlight" role="cell">${{ major2.fees_per_term }}</div>
         </div>
-
-        <div class="data-row">
-            <div class="data-label">Focus Areas</div>
-            <div class="data-cell">
-                <div class="category-chips">
-                    {% for c in major1.categories.all %}<span class="chip">{{ c.name }}</span>{% endfor %}
-                </div>
+        <div class="compare-row" role="row">
+            <div class="compare-row-label" role="rowheader">Focus areas</div>
+            <div class="compare-row-cell" role="cell">
+                {% for c in major1.categories.all %}
+                    <span class="chip chip-primary">{{ c.name }}</span>
+                {% empty %}
+                    <span class="text-muted">—</span>
+                {% endfor %}
             </div>
-            <div class="data-cell">
-                <div class="category-chips">
-                    {% for c in major2.categories.all %}<span class="chip">{{ c.name }}</span>{% endfor %}
-                </div>
+            <div class="compare-row-cell" role="cell">
+                {% for c in major2.categories.all %}
+                    <span class="chip chip-primary">{{ c.name }}</span>
+                {% empty %}
+                    <span class="text-muted">—</span>
+                {% endfor %}
             </div>
         </div>
-
     </div>
 
-    <div class="action-bar">
-        <a href="{% url 'major' major1.id %}" class="btn-outline">View {{ major1.name }}</a>
-        <a href="{% url 'major' major2.id %}" class="btn-outline">View {{ major2.name }}</a>
+    <div class="flex justify-center gap-3 mt-8">
+        <a href="{% url 'major' major1.id %}" class="btn btn-outline">View {{ major1.name|truncatechars:24 }}</a>
+        <a href="{% url 'major' major2.id %}" class="btn btn-outline">View {{ major2.name|truncatechars:24 }}</a>
     </div>
-
 </div>
 {% endblock %}

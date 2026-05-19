@@ -1,206 +1,62 @@
 {% extends "base.html" %}
-
 {% block title %}Majors at {{ college.name }} | Gam3aty{% endblock %}
 
 {% block content %}
-<style>
-    /* ===== BREADCRUMB BAR ===== */
-    .breadcrumb-nav {
-        margin-bottom: 20px;
-        font-size: 0.9rem;
-    }
-    .breadcrumb-nav a { color: var(--primary); text-decoration: none; font-weight: 500; }
-    .breadcrumb-nav span { color: var(--text-muted); margin: 0 5px; }
+<div class="page">
 
-    /* ===== COLLEGE MINI-HERO ===== */
-    .college-banner {
-        background: linear-gradient(135deg, var(--primary), var(--primary-light));
-        color: white;
-        padding: 50px 40px;
-        border-radius: 24px;
-        margin-bottom: 40px;
-        box-shadow: var(--shadow);
-        position: relative;
-        overflow: hidden;
-    }
-
-    .college-banner::after {
-        content: "🎓";
-        position: absolute;
-        right: 40px;
-        bottom: -20px;
-        font-size: 12rem;
-        opacity: 0.1;
-        transform: rotate(-15deg);
-    }
-
-    .college-banner h2 {
-        font-size: 2rem;
-        font-weight: 800;
-        margin-bottom: 8px;
-        letter-spacing: -1px;
-    }
-
-    .college-banner p {
-        opacity: 0.9;
-        font-size: 1.1rem;
-        max-width: 600px;
-    }
-
-    /* ===== MAJORS GRID ===== */
-    .majors-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-        gap: 25px;
-        margin-bottom: 60px;
-    }
-
-    .major-card {
-        background: white;
-        border-radius: 20px;
-        overflow: hidden;
-        text-decoration: none;
-        transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-        border: 1px solid rgba(0,0,0,0.05);
-        box-shadow: 0 4px 15px rgba(0,0,0,0.02);
-        display: flex;
-        flex-direction: column;
-    }
-
-    .major-card:hover {
-        transform: translateY(-10px);
-        box-shadow: var(--hover-shadow);
-        border-color: var(--primary-light);
-    }
-
-    .major-img {
-        height: 170px;
-        position: relative;
-        overflow: hidden;
-    }
-
-    .major-img img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform 0.6s ease;
-    }
-
-    .major-card:hover .major-img img {
-        transform: scale(1.1);
-    }
-
-    .major-badge {
-        position: absolute;
-        top: 15px;
-        left: 15px;
-        background: rgba(255, 255, 255, 0.9);
-        color: var(--primary);
-        padding: 4px 12px;
-        border-radius: 50px;
-        font-size: 11px;
-        font-weight: 700;
-        text-transform: uppercase;
-        backdrop-filter: blur(4px);
-    }
-
-    .major-content {
-        padding: 20px;
-        flex-grow: 1;
-    }
-
-    .major-content h3 {
-        color: var(--dark);
-        font-size: 1.2rem;
-        font-weight: 700;
-        margin-bottom: 10px;
-        line-height: 1.3;
-    }
-
-    .major-content p {
-        font-size: 0.9rem;
-        color: var(--text-muted);
-        line-height: 1.6;
-    }
-
-    .major-footer {
-        padding: 15px 20px;
-        border-top: 1px solid #f1f1f1;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        background: #fafafa;
-    }
-
-    .major-footer span {
-        font-size: 0.85rem;
-        font-weight: 600;
-        color: var(--primary);
-    }
-
-    /* Empty State */
-    .empty-majors {
-        grid-column: 1 / -1;
-        text-align: center;
-        padding: 60px;
-        background: white;
-        border-radius: 24px;
-        color: #adb5bd;
-    }
-</style>
-
-<div class="container" style="max-width: 1100px; margin: 30px auto;">
-
-    <nav class="breadcrumb-nav">
+    <nav class="breadcrumbs" aria-label="Breadcrumb">
         <a href="{% url 'university' college.university.id %}">{{ college.university.name }}</a>
-        <span>/</span>
+        <span class="sep" aria-hidden="true">/</span>
         <a href="{% url 'college' college.id %}">{{ college.name }}</a>
-        <span>/</span>
-        <span style="color: var(--dark);">Majors</span>
+        <span class="sep" aria-hidden="true">/</span>
+        <span aria-current="page">Majors</span>
     </nav>
 
-    <div class="college-banner">
-        <p>Academic Programs & Specialized Majors</p>
-        <h2>{{ college.name }} 🎓</h2>
-        <p>Explore the diverse career paths and specialized degrees offered by this faculty.</p>
-    </div>
+    <section class="hero hero-compact">
+        <div>
+            <span class="hero-eyebrow">Academic programs</span>
+            <h1>{{ college.name }} <span class="accent">majors</span></h1>
+            <p class="hero-sub">Specialised degrees and career paths offered by this faculty.</p>
+        </div>
+        <div class="hero-stats" aria-label="Major count">
+            <div class="hero-stat">
+                <strong>{{ majors|length }}</strong>
+                <span>Programs</span>
+            </div>
+        </div>
+    </section>
 
-    <div class="majors-grid">
+    <div class="grid-auto-lg">
         {% for major in majors %}
-        <a href="{% url 'major' major.id %}" class="major-card">
-            
-            <div class="major-img">
-                <span class="major-badge">Specialization</span>
+        <a href="{% url 'major' major.id %}" class="card animate-slide-up"
+           style="animation-delay: {{ forloop.counter0 }}50ms;">
+            <div class="card-media">
+                <span class="badge badge-floating">Specialisation</span>
                 {% if major.image %}
-                    <img src="{{ major.image.url }}" alt="{{ major.name }}">
+                    <img src="{{ major.image.url }}" alt="{{ major.name }}" loading="lazy">
                 {% elif college.image %}
-                    <img src="{{ college.image.url }}" alt="{{ major.name }}">
+                    <img src="{{ college.image.url }}" alt="{{ major.name }}" loading="lazy">
                 {% elif college.university.image %}
-                    <img src="{{ college.university.image.url }}" alt="{{ major.name }}">
+                    <img src="{{ college.university.image.url }}" alt="{{ major.name }}" loading="lazy">
                 {% else %}
-                    <div style="width:100%; height:100%; background:#f0f3f7; display:flex; align-items:center; justify-content:center; color:#adb5bd;">
-                        📸 No Image
-                    </div>
+                    <div class="card-media-fallback" aria-hidden="true">🎓</div>
                 {% endif %}
             </div>
-
-            <div class="major-content">
-                <h3>{{ major.name }}</h3>
-                <p>{{ major.description|truncatechars:100 }}</p>
-            </div>
-
-            <div class="major-footer">
-                <span>View Degree Requirements</span>
-                <span style="font-size: 1.1rem;">→</span>
+            <div class="card-body">
+                <span class="eyebrow">Undergraduate</span>
+                <span class="card-title">{{ major.name }}</span>
+                {% if major.description %}
+                    <p class="line-clamp-2 text-sm text-muted">{{ major.description|truncatechars:120 }}</p>
+                {% endif %}
+                <div class="card-foot">
+                    <span>View requirements</span>
+                    <span class="arrow" aria-hidden="true">→</span>
+                </div>
             </div>
         </a>
         {% empty %}
-        <div class="empty-majors">
-            <span style="font-size: 3rem; display: block; margin-bottom: 10px;">📋</span>
-            <p>No specific majors have been listed for this college yet.</p>
-        </div>
+            {% include "partials/_empty_state.html" with icon="📋" title="No majors listed" message="This college hasn't published its majors yet." %}
         {% endfor %}
     </div>
-
 </div>
-{% endblock content %}
+{% endblock %}

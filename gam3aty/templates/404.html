@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Page Not Found | Gam3aty{% endblock %}
+
+{% block content %}
+<div class="error-page">
+    <div>
+        <div class="code" aria-hidden="true">404</div>
+        <h1>This page doesn't exist</h1>
+        <p>The page you're looking for may have moved, or it never existed. Let's get you back on track.</p>
+        <div class="error-actions">
+            <a href="{% url 'home' %}" class="btn btn-primary">Back to home</a>
+            <a href="{% url 'explore_majors' %}" class="btn btn-outline">Explore majors</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
