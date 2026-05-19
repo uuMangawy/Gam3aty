@@ -1,0 +1,28 @@
+databases:
+  - name: gam3aty-db
+    plan: free
+    databaseName: gam3aty
+    user: gam3aty
+
+services:
+  - type: web
+    name: gam3aty
+    runtime: python
+    plan: free
+    region: frankfurt
+    branch: claude/document-codebase-frontend-x7OLq
+    buildCommand: "./build.sh"
+    startCommand: "cd gam3aty && gunicorn gam3aty.wsgi:application"
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: gam3aty-db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: "False"
+      - key: PYTHON_VERSION
+        value: "3.11.9"
+      - key: WEB_CONCURRENCY
+        value: "4"
