@@ -1,337 +1,133 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}Gam3aty | Discover Your Academic Future{% endblock %}
 
 {% block content %}
-<style>
-    /* ===== THEME & GLOBAL ANIMATIONS ===== */
-    :root {
-        --card-radius: 24px;
-        --primary-gradient: linear-gradient(135deg, #004aad 0%, #0062e3 100%);
-        --transition-soft: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-    }
+<div class="page">
 
-    @keyframes slideUpFade {
-        from { opacity: 0; transform: translateY(30px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
+    <section class="hero">
+        <span class="hero-eyebrow">Egypt's University Guide</span>
+        <h1>Navigate your <span class="accent">academic future</span> with clarity.</h1>
+        <p class="hero-sub">
+            Compare Egyptian universities, explore specialized majors, and find the program that
+            matches your ambitions — all in one place.
+        </p>
 
-    /* ===== HERO SECTION ===== */
-    .hero-banner {
-        background: var(--primary-gradient);
-        color: white;
-        padding: 80px 50px;
-        border-radius: var(--card-radius);
-        margin-bottom: 60px;
-        position: relative;
-        overflow: hidden;
-        box-shadow: 0 20px 50px rgba(0, 74, 173, 0.2);
-        animation: slideUpFade 0.7s ease-out;
-    }
+        <div class="hero-cta">
+            <a href="{% url 'explore_majors' %}" class="btn btn-primary btn-lg">
+                Explore Majors
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+            </a>
+            <a href="{% url 'universities' %}" class="btn btn-ghost btn-lg">Browse Universities</a>
+        </div>
 
-    .hero-banner::before {
-        content: "";
-        position: absolute;
-        top: -10%;
-        right: -10%;
-        width: 300px;
-        height: 300px;
-        background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
-        border-radius: 50%;
-    }
-
-    .hero-banner h1 {
-        font-size: 3.2rem;
-        font-weight: 800;
-        margin-bottom: 15px;
-        letter-spacing: -2px;
-        line-height: 1.1;
-    }
-
-    .hero-banner h1 span {
-        color: var(--accent);
-    }
-
-    .hero-banner p {
-        font-size: 1.2rem;
-        opacity: 0.9;
-        max-width: 550px;
-        margin-bottom: 35px;
-    }
-
-    /* Hero Glassmorphism Stats */
-    .hero-stats {
-        display: flex;
-        gap: 30px;
-        background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(12px);
-        padding: 18px 35px;
-        border-radius: 100px;
-        width: fit-content;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-    }
-
-    .stat-item { text-align: center; }
-    .stat-item strong { display: block; font-size: 1.3rem; font-weight: 800; }
-    .stat-item span { font-size: 0.7rem; text-transform: uppercase; opacity: 0.8; font-weight: 600; letter-spacing: 0.5px; }
-
-    /* ===== SECTION HEADERS ===== */
-    .section-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-end;
-        margin-bottom: 30px;
-        padding: 0 5px;
-    }
-
-    .section-header h2 {
-        font-size: 1.8rem;
-        font-weight: 800;
-        color: var(--dark);
-        letter-spacing: -0.5px;
-    }
-
-    .section-header h2 span { color: var(--primary); }
-
-    .view-all {
-        font-size: 0.85rem;
-        font-weight: 700;
-        color: var(--primary);
-        text-decoration: none;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        transition: var(--transition-soft);
-    }
-
-    .view-all:hover { gap: 12px; color: var(--primary-light); }
-
-    /* ===== GRID & PREMIUM CARDS ===== */
-    .grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-        gap: 30px;
-        margin-bottom: 70px;
-    }
-
-    .card {
-        background: white;
-        border-radius: var(--card-radius);
-        overflow: hidden;
-        border: 1px solid #f1f5f9;
-        transition: var(--transition-soft);
-        display: flex;
-        flex-direction: column;
-        position: relative;
-        animation: slideUpFade 0.8s ease-out both;
-    }
-
-    .card:hover {
-        transform: translateY(-12px);
-        box-shadow: 0 30px 60px rgba(0, 74, 173, 0.12);
-        border-color: var(--primary-light);
-    }
-
-    .card-image-wrapper {
-        position: relative;
-        height: 220px;
-        overflow: hidden;
-    }
-
-    .card-image-wrapper img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform 1s cubic-bezier(0.165, 0.84, 0.44, 1);
-    }
-
-    .card:hover .card-image-wrapper img { transform: scale(1.1); }
-
-    .badge-premium {
-        position: absolute;
-        top: 15px;
-        left: 15px;
-        background: var(--accent);
-        color: #000;
-        padding: 6px 14px;
-        border-radius: 50px;
-        font-size: 10px;
-        font-weight: 800;
-        z-index: 5;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    }
-
-    /* Card Info Content */
-    .card-content {
-        padding: 25px;
-        flex-grow: 1;
-        display: flex;
-        flex-direction: column;
-    }
-
-    .category-label {
-        font-size: 0.75rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        color: var(--primary);
-        letter-spacing: 0.8px;
-        margin-bottom: 12px;
-        opacity: 0.8;
-    }
-
-    .card-title {
-        font-size: 1.3rem;
-        font-weight: 800;
-        color: #1a1a1a;
-        text-decoration: none;
-        margin-bottom: 20px;
-        line-height: 1.3;
-        transition: color 0.3s ease;
-    }
-
-    .card-title:hover { color: var(--primary); }
-
-    .card-footer {
-        margin-top: auto;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding-top: 15px;
-        border-top: 1px solid #f8fafc;
-    }
-
-    .fav-count {
-        font-size: 0.85rem;
-        font-weight: 700;
-        color: #64748b;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-    }
-
-    .fav-count i { color: #ef4444; }
-
-    .btn-explore-circle {
-        width: 40px;
-        height: 40px;
-        background: #f1f5f9;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: var(--primary);
-        font-weight: 800;
-        transition: var(--transition-soft);
-    }
-
-    .card:hover .btn-explore-circle {
-        background: var(--primary);
-        color: white;
-        transform: rotate(-45deg);
-    }
-
-    /* Staggered Load Delays */
-    .grid .card:nth-child(1) { animation-delay: 0.1s; }
-    .grid .card:nth-child(2) { animation-delay: 0.2s; }
-    .grid .card:nth-child(3) { animation-delay: 0.3s; }
-    .grid .card:nth-child(4) { animation-delay: 0.4s; }
-
-    @media (max-width: 768px) {
-        .hero-banner { padding: 50px 25px; text-align: center; }
-        .hero-banner h1 { font-size: 2.4rem; }
-        .hero-stats { margin: 0 auto; gap: 15px; padding: 12px 20px; }
-    }
-</style>
-
-<div class="container">
-
-    <header class="hero-banner">
-        <h1>Navigate Your <span>Future</span>.</h1>
-        <p>Egypt's premier university guide. Compare institutions, explore specialized majors, and find your perfect academic match.</p>
-        
-        <div class="hero-stats">
-            <div class="stat-item">
+        <div class="hero-stats" role="group" aria-label="Platform stats">
+            <div class="hero-stat">
                 <strong>{{ top_universities|length }}+</strong>
-                <span>Unis</span>
+                <span>Universities</span>
             </div>
-            <div class="stat-item">
+            <div class="hero-stat">
                 <strong>{{ top_majors|length }}+</strong>
                 <span>Majors</span>
             </div>
-            <div class="stat-item">
+            <div class="hero-stat">
                 <strong>2026</strong>
                 <span>Updated</span>
             </div>
         </div>
-    </header>
+    </section>
 
     <section class="section">
         <div class="section-header">
-            <h2>Featured <span>Institutions</span></h2>
-            <a href="{% url 'universities' %}" class="view-all">Browse All Universities →</a>
+            <div>
+                <span class="eyebrow">Top Picks</span>
+                <h2>Featured <span>institutions</span></h2>
+            </div>
+            <a href="{% url 'universities' %}" class="section-link">
+                Browse all
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+            </a>
         </div>
 
-        <div class="grid">
+        <div class="grid-auto-lg">
             {% for uni in top_universities %}
-            <article class="card">
-                <div class="card-image-wrapper">
+            <article class="card animate-slide-up" style="animation-delay: {{ forloop.counter0 }}00ms;">
+                <a href="{% url 'university' uni.id %}" class="card-media" aria-label="{{ uni.name }}">
                     {% if forloop.first %}
-                        <span class="badge-premium">TOP RANKED</span>
+                        <span class="badge badge-floating badge-accent">Top Ranked</span>
                     {% endif %}
-                    
                     {% if uni.image %}
-                        <img src="{{ uni.image.url }}" alt="{{ uni.name }}">
+                        <img src="{{ uni.image.url }}" alt="{{ uni.name }} campus" loading="lazy">
                     {% else %}
-                        <div style="height:100%; background:#f1f5f9; display:flex; align-items:center; justify-content:center; font-size:3rem;">🏛️</div>
+                        <div class="card-media-fallback" aria-hidden="true">🏛️</div>
                     {% endif %}
-                </div>
-
-                <div class="card-content">
-                    <span class="category-label">University</span>
+                </a>
+                <div class="card-body">
+                    <span class="eyebrow">University</span>
                     <a href="{% url 'university' uni.id %}" class="card-title">{{ uni.name }}</a>
-                    
-                    <div class="card-footer">
-                        <span class="fav-count">❤️ {{ uni.total_favorites }} Students</span>
-                        <div class="btn-explore-circle">→</div>
+                    <div class="card-foot">
+                        <span><span aria-hidden="true">❤</span> {{ uni.total_favorites }} students</span>
+                        <span class="arrow" aria-hidden="true">→</span>
                     </div>
                 </div>
             </article>
+            {% empty %}
+                {% include "partials/_empty_state.html" with icon="🏛️" title="No universities yet" message="Universities will appear here as they are added." %}
             {% endfor %}
         </div>
     </section>
 
     <section class="section">
         <div class="section-header">
-            <h2>Trending <span>Majors</span></h2>
-            <a href="{% url 'explore_majors' %}" class="view-all">Explore Career Paths →</a>
+            <div>
+                <span class="eyebrow">In Demand</span>
+                <h2>Trending <span>majors</span></h2>
+            </div>
+            <a href="{% url 'explore_majors' %}" class="section-link">
+                Explore all
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+            </a>
         </div>
 
-        <div class="grid">
+        <div class="grid-auto-lg">
             {% for major in top_majors %}
-            <article class="card">
-                <div class="card-image-wrapper">
+            <article class="card animate-slide-up" style="animation-delay: {{ forloop.counter0 }}00ms;">
+                <a href="{% url 'major' major.id %}" class="card-media" aria-label="{{ major.name }}">
                     {% if major.image %}
-                        <img src="{{ major.image.url }}" alt="{{ major.name }}">
+                        <img src="{{ major.image.url }}" alt="{{ major.name }}" loading="lazy">
                     {% elif major.college.image %}
-                        <img src="{{ major.college.image.url }}" alt="{{ major.name }}">
+                        <img src="{{ major.college.image.url }}" alt="{{ major.name }}" loading="lazy">
                     {% elif major.college.university.image %}
-                        <img src="{{ major.college.university.image.url }}" alt="{{ major.name }}">
+                        <img src="{{ major.college.university.image.url }}" alt="{{ major.name }}" loading="lazy">
                     {% else %}
-                        <div style="height:100%; background:#f1f5f9; display:flex; align-items:center; justify-content:center; font-size:3rem;">🎓</div>
+                        <div class="card-media-fallback" aria-hidden="true">🎓</div>
                     {% endif %}
-                </div>
-
-                <div class="card-content">
-                    <span class="category-label">{{ major.college.university.name|truncatechars:30 }}</span>
+                </a>
+                <div class="card-body">
+                    <span class="eyebrow">{{ major.college.university.name|truncatechars:32 }}</span>
                     <a href="{% url 'major' major.id %}" class="card-title">{{ major.name }}</a>
-                    
-                    <div class="card-footer">
-                        <span class="fav-count" style="color: var(--primary-light);">✨ High Demand</span>
-                        <div class="btn-explore-circle">→</div>
+                    <p class="card-meta">{{ major.college.name|truncatechars:48 }}</p>
+                    <div class="card-foot">
+                        <span class="badge badge-info">High Demand</span>
+                        <span class="arrow" aria-hidden="true">→</span>
                     </div>
                 </div>
             </article>
+            {% empty %}
+                {% include "partials/_empty_state.html" with icon="🎓" title="No majors yet" message="Trending majors will appear here." %}
             {% endfor %}
         </div>
     </section>

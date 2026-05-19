@@ -1,0 +1,12 @@
+{% comment %}
+    Usage:
+    {% include "partials/_empty_state.html" with icon="🎓" title="Nothing here yet" message="..." cta_label="Browse all" cta_url=some_url %}
+{% endcomment %}
+<div class="empty-state">
+    <div class="empty-state-icon" aria-hidden="true">{{ icon|default:"📭" }}</div>
+    <h3>{{ title|default:"Nothing here yet" }}</h3>
+    {% if message %}<p>{{ message }}</p>{% endif %}
+    {% if cta_url and cta_label %}
+        <a href="{{ cta_url }}" class="btn btn-primary">{{ cta_label }}</a>
+    {% endif %}
+</div>

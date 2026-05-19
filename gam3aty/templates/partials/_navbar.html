@@ -1,0 +1,112 @@
+{% load static %}
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="nav" role="banner">
+    <div class="nav-inner">
+        <a href="{% url 'home' %}" class="nav-brand" aria-label="Gam3aty home">
+            <span class="nav-brand-mark" aria-hidden="true">G</span>
+            <span>Gam3aty</span>
+        </a>
+
+        <nav class="nav-links" aria-label="Primary">
+            <a href="{% url 'home' %}" class="nav-link"
+               {% if request.resolver_match.url_name == 'home' %}aria-current="page"{% endif %}>Home</a>
+            <a href="{% url 'explore_majors' %}" class="nav-link"
+               {% if request.resolver_match.url_name == 'explore_majors' %}aria-current="page"{% endif %}>Explore</a>
+            <a href="{% url 'universities' %}" class="nav-link"
+               {% if request.resolver_match.url_name == 'universities' %}aria-current="page"{% endif %}>Universities</a>
+            <a href="{% url 'about' %}" class="nav-link"
+               {% if request.resolver_match.url_name == 'about' %}aria-current="page"{% endif %}>About</a>
+        </nav>
+
+        <div class="nav-actions">
+            {% if show_search %}
+            <form method="GET"
+                  action="{% if 'universities' in request.path %}{% url 'universities' %}{% else %}{% url 'explore_majors' %}{% endif %}"
+                  class="nav-search desktop-only" role="search">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <circle cx="11" cy="11" r="7"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <label for="nav-search-input" class="sr-only">Search</label>
+                <input id="nav-search-input" type="search" name="q"
+                       placeholder="Search universities, majors..."
+                       value="{{ search_query|default:'' }}">
+                <button type="submit">Search</button>
+            </form>
+            {% endif %}
+
+            <button class="icon-btn theme-toggle" data-theme-toggle
+                    aria-label="Toggle theme" aria-pressed="false" type="button">
+                <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+                <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <circle cx="12" cy="12" r="4"></circle>
+                    <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path>
+                </svg>
+            </button>
+
+            {% if user.is_authenticated %}
+                <a href="{% url 'profile' %}" class="user-chip desktop-only">
+                    {% if user.profile.image %}
+                        <img src="{{ user.profile.image.url }}" alt="" class="avatar-sm">
+                    {% else %}
+                        <span class="avatar-sm" aria-hidden="true">{{ user.username|slice:":1"|upper }}</span>
+                    {% endif %}
+                    <span>{{ user.username }}</span>
+                </a>
+                <form method="POST" action="{% url 'logout' %}" class="desktop-only" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-ghost btn-sm">Logout</button>
+                </form>
+            {% else %}
+                <a href="{% url 'login' %}" class="btn btn-outline btn-sm desktop-only">Login</a>
+                <a href="{% url 'register' %}" class="btn btn-primary btn-sm desktop-only">Register</a>
+            {% endif %}
+
+            <button class="icon-btn nav-toggle" data-nav-toggle
+                    aria-label="Open menu" aria-expanded="false"
+                    aria-controls="mobile-menu" type="button">
+                <span class="nav-toggle-line"></span>
+                <span class="nav-toggle-line"></span>
+                <span class="nav-toggle-line"></span>
+            </button>
+        </div>
+    </div>
+</header>
+
+<div class="mobile-menu" id="mobile-menu" aria-label="Mobile">
+    {% if show_search %}
+    <form method="GET"
+          action="{% if 'universities' in request.path %}{% url 'universities' %}{% else %}{% url 'explore_majors' %}{% endif %}"
+          class="nav-search" role="search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <circle cx="11" cy="11" r="7"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="search" name="q" placeholder="Search..." value="{{ search_query|default:'' }}" aria-label="Search">
+        <button type="submit">Go</button>
+    </form>
+    {% endif %}
+
+    <a href="{% url 'home' %}" class="nav-link">Home</a>
+    <a href="{% url 'explore_majors' %}" class="nav-link">Explore Majors</a>
+    <a href="{% url 'universities' %}" class="nav-link">Universities</a>
+    <a href="{% url 'about' %}" class="nav-link">About</a>
+
+    {% if user.is_authenticated %}
+        <a href="{% url 'profile' %}" class="nav-link">My Profile</a>
+        <form method="POST" action="{% url 'logout' %}" style="margin-top:var(--space-4);">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-ghost btn-block">Logout</button>
+        </form>
+    {% else %}
+        <div class="auth-row">
+            <a href="{% url 'login' %}" class="btn btn-outline">Login</a>
+            <a href="{% url 'register' %}" class="btn btn-primary">Register</a>
+        </div>
+    {% endif %}
+</div>

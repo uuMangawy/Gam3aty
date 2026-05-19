@@ -1,0 +1,44 @@
+{% load static %}
+<footer class="footer" role="contentinfo">
+    <div class="footer-inner">
+        <div class="footer-brand">
+            <h3>Gam3aty</h3>
+            <p>Your decision-support companion for navigating higher education in Egypt — discover universities, compare majors, and shape your academic future.</p>
+        </div>
+
+        <div class="footer-col">
+            <h4>Discover</h4>
+            <ul>
+                <li><a href="{% url 'universities' %}">Universities</a></li>
+                <li><a href="{% url 'explore_majors' %}">Explore Majors</a></li>
+                <li><a href="{% url 'about' %}">About Us</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-col">
+            <h4>Account</h4>
+            <ul>
+                {% if user.is_authenticated %}
+                    <li><a href="{% url 'profile' %}">My Dashboard</a></li>
+                    <li><a href="{% url 'profile_update' %}">Settings</a></li>
+                {% else %}
+                    <li><a href="{% url 'login' %}">Sign In</a></li>
+                    <li><a href="{% url 'register' %}">Create Account</a></li>
+                {% endif %}
+            </ul>
+        </div>
+
+        <div class="footer-col">
+            <h4>Resources</h4>
+            <ul>
+                <li><a href="{% url 'about' %}">Our Mission</a></li>
+                <li><a href="{% url 'explore_majors' %}">Compare Programs</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="footer-bottom">
+        <span>&copy; 2026 Gam3aty. Built for Egyptian students.</span>
+        <span>Made with care.</span>
+    </div>
+</footer>

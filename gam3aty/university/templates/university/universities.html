@@ -1,243 +1,56 @@
 {% extends "base.html" %}
-
-{% block title %}All Universities | Gam3aty🎓{% endblock %}
+{% block title %}All Universities | Gam3aty{% endblock %}
 
 {% block content %}
-<style>
-    /* ===== ANIMATIONS ===== */
-    @keyframes fadeInUp {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
+<div class="page">
 
-    /* ===== PAGE HEADER ===== */
-    .uni-header {
-        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-        color: white;
-        padding: 60px 40px;
-        border-radius: 24px;
-        margin-bottom: 40px;
-        box-shadow: 0 20px 40px rgba(0, 74, 173, 0.15);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        position: relative;
-        overflow: hidden;
-        animation: fadeInUp 0.6s ease-out;
-    }
-
-    .uni-header::after {
-        content: '';
-        position: absolute;
-        right: -50px;
-        top: -50px;
-        width: 200px;
-        height: 200px;
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 50%;
-    }
-
-    .header-content h2 {
-        font-size: 2.5rem;
-        font-weight: 800;
-        margin-bottom: 10px;
-        letter-spacing: -1.5px;
-    }
-
-    .header-content p {
-        opacity: 0.85;
-        font-size: 1.1rem;
-        max-width: 500px;
-    }
-
-    .uni-count {
-        background: rgba(255, 255, 255, 0.15);
-        padding: 12px 24px;
-        border-radius: 100px;
-        font-weight: 700;
-        backdrop-filter: blur(12px);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-    }
-
-    /* ===== GRID SYSTEM ===== */
-    .uni-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-        gap: 30px;
-        margin-bottom: 60px;
-    }
-
-    /* ===== CARD DESIGN ===== */
-    .uni-card {
-        background: var(--white);
-        border-radius: 24px;
-        overflow: hidden;
-        text-decoration: none;
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        display: flex;
-        flex-direction: column;
-        border: 1px solid #f1f5f9;
-        position: relative;
-        animation: fadeInUp 0.8s ease-out both;
-    }
-
-    .uni-card:hover {
-        transform: translateY(-12px);
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
-        border-color: var(--primary-light);
-    }
-
-    /* Image Section */
-    .uni-img-container {
-        width: 100%;
-        height: 220px;
-        overflow: hidden;
-        position: relative;
-    }
-
-    .uni-img-container img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .image-overlay {
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(to top, rgba(0,0,0,0.4), transparent);
-        opacity: 0;
-        transition: opacity 0.3s ease;
-    }
-
-    .uni-card:hover .image-overlay { opacity: 1; }
-    .uni-card:hover .uni-img-container img { transform: scale(1.1); }
-
-    /* Floating Badge */
-    .location-badge {
-        position: absolute;
-        top: 15px;
-        right: 15px;
-        background: rgba(255, 255, 255, 0.9);
-        padding: 6px 12px;
-        border-radius: 50px;
-        font-size: 0.75rem;
-        font-weight: 700;
-        color: var(--primary);
-        z-index: 10;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
-
-    /* Info Section */
-    .uni-info {
-        padding: 25px;
-        flex-grow: 1;
-        display: flex;
-        flex-direction: column;
-        background: white;
-    }
-
-    .uni-tag {
-        font-size: 0.75rem;
-        color: var(--primary);
-        background: rgba(0, 74, 173, 0.05);
-        width: fit-content;
-        padding: 4px 12px;
-        border-radius: 50px;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        font-weight: 700;
-        margin-bottom: 12px;
-    }
-
-    .uni-info h3 {
-        color: var(--dark);
-        font-size: 1.25rem;
-        font-weight: 800;
-        line-height: 1.4;
-        margin-bottom: 15px;
-    }
-
-    .view-link {
-        margin-top: auto;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        color: var(--primary);
-        font-weight: 700;
-        font-size: 0.9rem;
-        transition: gap 0.3s ease;
-    }
-
-    .uni-card:hover .view-link {
-        gap: 15px;
-    }
-
-    /* Staggered Animation for Grid */
-    {% for i in "123456789" %}
-    .uni-card:nth-child({{ forloop.counter }}) { animation-delay: {{ forloop.counter|add:"0.1" }}s; }
-    {% endfor %}
-
-    /* ===== EMPTY STATE ===== */
-    .uni-empty {
-        grid-column: 1 / -1;
-        background: white;
-        padding: 100px 20px;
-        border-radius: 30px;
-        text-align: center;
-        border: 2px dashed #e2e8f0;
-    }
-
-    @media (max-width: 768px) {
-        .uni-header { padding: 40px 20px; flex-direction: column; text-align: center; gap: 20px; }
-        .header-content h2 { font-size: 1.8rem; }
-    }
-</style>
-
-<div class="uni-header">
-    <div class="header-content">
-        <h2>Explore Universities 🏛️</h2>
-        <p>Find your future among Egypt's world-class educational institutions and private universities.</p>
-    </div>
-    <div class="uni-count">
-        {{ universities|length }} Institutions Found
-    </div>
-</div>
-
-<div class="uni-grid">
-    {% for uni in universities %}
-    <a href="{% url 'university' uni.id %}" class="uni-card">
-        <div class="location-badge">Egypt</div>
-        
-        <div class="uni-img-container">
-            <div class="image-overlay"></div>
-            {% if uni.image %}
-                <img src="{{ uni.image.url }}" alt="{{ uni.name }}">
-            {% else %}
-                <div class="no-img-placeholder">
-                    <span style="font-size: 3rem; margin-bottom: 10px;">🏛️</span>
-                    <span style="font-weight: 600;">Campus Image</span>
-                </div>
-            {% endif %}
+    <section class="hero hero-compact">
+        <div>
+            <span class="hero-eyebrow">Catalogue</span>
+            <h1>Explore <span class="accent">Egyptian universities</span></h1>
+            <p class="hero-sub">From historic public institutions to world-class private campuses — find your future here.</p>
         </div>
-
-        <div class="uni-info">
-            <span class="uni-tag">Accredited Institution</span>
-            <h3>{{ uni.name }}</h3>
-            
-            <div class="view-link">
-                Explore Profile <span>→</span>
+        <div class="hero-stats" aria-label="Catalogue stats">
+            <div class="hero-stat">
+                <strong>{{ universities|length }}</strong>
+                <span>Institutions</span>
             </div>
         </div>
-    </a>
-    {% empty %}
-    <div class="uni-empty">
-        <div style="font-size: 4rem; margin-bottom: 20px;">🕵️‍♂️</div>
-        <h3>No matches found</h3>
-        <p>We couldn't find any institutions matching "{{ search_query }}".</p>
-        <a href="{% url 'universities' %}" style="color: var(--primary); font-weight: 700; text-decoration: none; margin-top: 15px; display: inline-block;">Clear all filters</a>
+    </section>
+
+    {% if search_query %}
+    <div class="results-meta">
+        <div>
+            Showing results for <strong>"{{ search_query }}"</strong>
+        </div>
+        <a href="{% url 'universities' %}" class="btn btn-ghost btn-sm">Clear search</a>
     </div>
-    {% endfor %}
+    {% endif %}
+
+    <div class="grid-auto-lg">
+        {% for uni in universities %}
+        <a href="{% url 'university' uni.id %}" class="card animate-slide-up"
+           style="animation-delay: {{ forloop.counter0 }}50ms;">
+            <div class="card-media">
+                <span class="badge badge-floating">Egypt</span>
+                {% if uni.image %}
+                    <img src="{{ uni.image.url }}" alt="{{ uni.name }} campus" loading="lazy">
+                {% else %}
+                    <div class="card-media-fallback" aria-hidden="true">🏛️</div>
+                {% endif %}
+            </div>
+            <div class="card-body">
+                <span class="eyebrow">Accredited Institution</span>
+                <span class="card-title">{{ uni.name }}</span>
+                <div class="card-foot">
+                    <span>View profile</span>
+                    <span class="arrow" aria-hidden="true">→</span>
+                </div>
+            </div>
+        </a>
+        {% empty %}
+            {% include "partials/_empty_state.html" with icon="🔎" title="No matches found" message="We couldn't find any universities matching your search. Try a different keyword or clear the filter." cta_label="Clear filters" cta_url="/universities/" %}
+        {% endfor %}
+    </div>
 </div>
 {% endblock %}

@@ -1,0 +1,240 @@
+/* =================================================================
+   Gam3aty Design Tokens
+   The single source of truth for colors, spacing, type, and motion.
+   ================================================================= */
+
+:root {
+    /* ===== Color Primitives ===== */
+    /* Primary — Indigo: academic, trustworthy, modern */
+    --indigo-50:  #EEF2FF;
+    --indigo-100: #E0E7FF;
+    --indigo-200: #C7D2FE;
+    --indigo-300: #A5B4FC;
+    --indigo-400: #818CF8;
+    --indigo-500: #6366F1;
+    --indigo-600: #4F46E5;
+    --indigo-700: #4338CA;
+    --indigo-800: #3730A3;
+    --indigo-900: #312E81;
+
+    /* Accent — Amber: warmth, energy, subtle nod to Egyptian heritage */
+    --amber-50:  #FFFBEB;
+    --amber-100: #FEF3C7;
+    --amber-200: #FDE68A;
+    --amber-300: #FCD34D;
+    --amber-400: #FBBF24;
+    --amber-500: #F59E0B;
+    --amber-600: #D97706;
+    --amber-700: #B45309;
+
+    /* Neutral — Slate */
+    --slate-50:  #F8FAFC;
+    --slate-100: #F1F5F9;
+    --slate-200: #E2E8F0;
+    --slate-300: #CBD5E1;
+    --slate-400: #94A3B8;
+    --slate-500: #64748B;
+    --slate-600: #475569;
+    --slate-700: #334155;
+    --slate-800: #1E293B;
+    --slate-900: #0F172A;
+    --slate-950: #020617;
+
+    /* Semantic primitives */
+    --emerald-50:  #ECFDF5;
+    --emerald-500: #10B981;
+    --emerald-600: #059669;
+    --rose-50:  #FFF1F2;
+    --rose-500: #F43F5E;
+    --rose-600: #E11D48;
+    --sky-50:  #F0F9FF;
+    --sky-500: #0EA5E9;
+
+    /* ===== Semantic Tokens (light theme) ===== */
+    --color-bg:           #FAFAFB;
+    --color-surface:      #FFFFFF;
+    --color-surface-alt:  var(--slate-50);
+    --color-surface-2:    var(--slate-100);
+    --color-border:       var(--slate-200);
+    --color-border-strong:var(--slate-300);
+    --color-text:         var(--slate-900);
+    --color-text-soft:    var(--slate-700);
+    --color-text-muted:   var(--slate-500);
+    --color-text-faint:   var(--slate-400);
+    --color-text-on-primary: #FFFFFF;
+    --color-text-on-accent:  var(--slate-900);
+
+    --color-primary:       var(--indigo-700);
+    --color-primary-hover: var(--indigo-800);
+    --color-primary-soft:  var(--indigo-50);
+    --color-primary-strong:var(--indigo-900);
+    --color-primary-fg:    var(--indigo-700);
+
+    --color-accent:       var(--amber-500);
+    --color-accent-hover: var(--amber-600);
+    --color-accent-soft:  var(--amber-50);
+
+    --color-success:      var(--emerald-600);
+    --color-success-soft: var(--emerald-50);
+    --color-error:        var(--rose-600);
+    --color-error-soft:   var(--rose-50);
+    --color-info:         var(--sky-500);
+    --color-info-soft:    var(--sky-50);
+
+    --color-focus-ring:   rgba(99, 102, 241, 0.35);
+    --color-overlay:      rgba(15, 23, 42, 0.55);
+
+    /* Gradients */
+    --gradient-primary:   linear-gradient(135deg, var(--indigo-700) 0%, var(--indigo-500) 100%);
+    --gradient-hero:      linear-gradient(135deg, var(--indigo-800) 0%, var(--indigo-600) 50%, var(--amber-500) 130%);
+    --gradient-accent:    linear-gradient(135deg, var(--amber-400) 0%, var(--amber-600) 100%);
+    --gradient-subtle:    linear-gradient(180deg, var(--slate-50) 0%, transparent 100%);
+
+    /* ===== Typography ===== */
+    --font-sans:    'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    --font-display: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+    --font-mono:    'JetBrains Mono', ui-monospace, monospace;
+
+    --text-xs:   0.75rem;    /* 12 */
+    --text-sm:   0.875rem;   /* 14 */
+    --text-base: 1rem;       /* 16 */
+    --text-md:   1.0625rem;  /* 17 */
+    --text-lg:   1.125rem;   /* 18 */
+    --text-xl:   1.25rem;    /* 20 */
+    --text-2xl:  1.5rem;     /* 24 */
+    --text-3xl:  1.875rem;   /* 30 */
+    --text-4xl:  2.25rem;    /* 36 */
+    --text-5xl:  3rem;       /* 48 */
+    --text-6xl:  3.75rem;    /* 60 */
+
+    --leading-tight:  1.15;
+    --leading-snug:   1.35;
+    --leading-normal: 1.6;
+    --leading-loose:  1.8;
+
+    --tracking-tight:  -0.02em;
+    --tracking-normal: 0em;
+    --tracking-wide:   0.04em;
+    --tracking-widest: 0.12em;
+
+    --weight-regular:  400;
+    --weight-medium:   500;
+    --weight-semibold: 600;
+    --weight-bold:     700;
+    --weight-extrabold:800;
+
+    /* ===== Spacing scale (4px base) ===== */
+    --space-0:  0;
+    --space-1:  0.25rem;
+    --space-2:  0.5rem;
+    --space-3:  0.75rem;
+    --space-4:  1rem;
+    --space-5:  1.25rem;
+    --space-6:  1.5rem;
+    --space-8:  2rem;
+    --space-10: 2.5rem;
+    --space-12: 3rem;
+    --space-16: 4rem;
+    --space-20: 5rem;
+    --space-24: 6rem;
+
+    /* ===== Radius ===== */
+    --radius-xs:   4px;
+    --radius-sm:   6px;
+    --radius-md:   10px;
+    --radius-lg:   14px;
+    --radius-xl:   20px;
+    --radius-2xl:  28px;
+    --radius-pill: 9999px;
+
+    /* ===== Shadows ===== */
+    --shadow-xs: 0 1px 1px rgba(15, 23, 42, 0.04);
+    --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06), 0 1px 1px rgba(15, 23, 42, 0.03);
+    --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.08), 0 2px 4px rgba(15, 23, 42, 0.04);
+    --shadow-lg: 0 16px 32px -8px rgba(15, 23, 42, 0.12), 0 4px 8px rgba(15, 23, 42, 0.05);
+    --shadow-xl: 0 24px 48px -12px rgba(15, 23, 42, 0.18), 0 8px 16px rgba(15, 23, 42, 0.06);
+    --shadow-focus: 0 0 0 3px var(--color-focus-ring);
+    --shadow-primary-glow: 0 12px 28px -8px rgba(67, 56, 202, 0.35);
+    --shadow-accent-glow:  0 12px 28px -8px rgba(245, 158, 11, 0.35);
+
+    /* ===== Motion ===== */
+    --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+    --ease-out:      cubic-bezier(0, 0, 0.2, 1);
+    --ease-in:       cubic-bezier(0.4, 0, 1, 1);
+    --ease-spring:   cubic-bezier(0.34, 1.56, 0.64, 1);
+
+    --dur-instant: 80ms;
+    --dur-fast:    150ms;
+    --dur-base:    250ms;
+    --dur-slow:    400ms;
+    --dur-slower:  650ms;
+
+    /* ===== Layout ===== */
+    --container-sm:  640px;
+    --container-md:  768px;
+    --container-lg:  1024px;
+    --container-xl:  1200px;
+    --container-2xl: 1400px;
+
+    --nav-height: 68px;
+    --z-base:     1;
+    --z-elevated: 10;
+    --z-sticky:   100;
+    --z-overlay:  500;
+    --z-modal:    700;
+    --z-toast:    900;
+}
+
+/* ===== Dark theme overrides ===== */
+[data-theme="dark"] {
+    --color-bg:           var(--slate-950);
+    --color-surface:      var(--slate-900);
+    --color-surface-alt:  var(--slate-800);
+    --color-surface-2:    #14202E;
+    --color-border:       var(--slate-700);
+    --color-border-strong:var(--slate-600);
+    --color-text:         #F1F5F9;
+    --color-text-soft:    var(--slate-300);
+    --color-text-muted:   var(--slate-400);
+    --color-text-faint:   var(--slate-500);
+
+    --color-primary:       var(--indigo-400);
+    --color-primary-hover: var(--indigo-300);
+    --color-primary-soft:  rgba(99, 102, 241, 0.12);
+    --color-primary-strong:var(--indigo-200);
+    --color-primary-fg:    var(--indigo-300);
+
+    --color-accent:       var(--amber-400);
+    --color-accent-hover: var(--amber-300);
+    --color-accent-soft:  rgba(245, 158, 11, 0.14);
+
+    --color-success-soft: rgba(16, 185, 129, 0.12);
+    --color-error-soft:   rgba(244, 63, 94, 0.14);
+    --color-info-soft:    rgba(14, 165, 233, 0.14);
+
+    --color-focus-ring:   rgba(129, 140, 248, 0.5);
+    --color-overlay:      rgba(0, 0, 0, 0.7);
+
+    --gradient-primary: linear-gradient(135deg, var(--indigo-600) 0%, var(--indigo-400) 100%);
+    --gradient-hero:    linear-gradient(135deg, var(--slate-800) 0%, var(--indigo-700) 50%, var(--amber-600) 140%);
+    --gradient-subtle:  linear-gradient(180deg, var(--slate-800) 0%, transparent 100%);
+
+    --shadow-xs: 0 1px 1px rgba(0, 0, 0, 0.4);
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4), 0 1px 1px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.45), 0 2px 4px rgba(0, 0, 0, 0.25);
+    --shadow-lg: 0 16px 32px -8px rgba(0, 0, 0, 0.55), 0 4px 8px rgba(0, 0, 0, 0.25);
+    --shadow-xl: 0 24px 48px -12px rgba(0, 0, 0, 0.65), 0 8px 16px rgba(0, 0, 0, 0.3);
+    --shadow-primary-glow: 0 12px 28px -8px rgba(99, 102, 241, 0.55);
+}
+
+/* Respect user motion preference */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}

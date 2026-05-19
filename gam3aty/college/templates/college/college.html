@@ -1,212 +1,90 @@
 {% extends "base.html" %}
-
 {% block title %}{{ college.name }} | {{ college.university.name }}{% endblock %}
 
 {% block content %}
-<style>
-    /* ===== BREADCRUMB OVERRIDE ===== */
-    .glass-breadcrumb {
-        background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(10px);
-        padding: 8px 15px;
-        border-radius: 50px;
-        display: inline-flex;
-        gap: 8px;
-        font-size: 0.85rem;
-        margin-bottom: 15px;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-    }
-    .glass-breadcrumb a { color: var(--accent); text-decoration: none; font-weight: 600; }
-    .glass-breadcrumb span { color: rgba(255,255,255,0.8); }
+<div class="page-narrow">
 
-    /* ===== HERO SECTION ===== */
-    .college-hero {
-        position: relative;
-        height: 380px;
-        border-radius: 24px;
-        overflow: hidden;
-        margin-bottom: 30px;
-        box-shadow: var(--shadow);
-    }
+    <nav class="breadcrumbs" aria-label="Breadcrumb">
+        <a href="{% url 'home' %}">Home</a>
+        <span class="sep" aria-hidden="true">/</span>
+        <a href="{% url 'universities' %}">Universities</a>
+        <span class="sep" aria-hidden="true">/</span>
+        <a href="{% url 'university' college.university.id %}">{{ college.university.name }}</a>
+        <span class="sep" aria-hidden="true">/</span>
+        <span aria-current="page">{{ college.name }}</span>
+    </nav>
 
-    .college-hero img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-
-    .hero-overlay {
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.2) 60%);
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-end;
-        padding: 40px;
-    }
-
-    .hero-overlay h1 {
-        color: white;
-        font-size: 2.5rem;
-        font-weight: 800;
-        letter-spacing: -1px;
-    }
-
-    /* ===== CONTENT LAYOUT ===== */
-    .college-grid {
-        display: grid;
-        grid-template-columns: 1.6fr 1fr;
-        gap: 30px;
-    }
-
-    .info-card {
-        background: white;
-        padding: 40px;
-        border-radius: 20px;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.04);
-    }
-
-    .info-card h2 {
-        font-size: 1.4rem;
-        color: var(--dark);
-        margin-bottom: 20px;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-
-    .college-desc {
-        line-height: 1.8;
-        color: var(--text-muted);
-        font-size: 1.05rem;
-    }
-
-    /* ===== SIDEBAR / ACTIONS ===== */
-    .sidebar-card {
-        background: #f8fafc;
-        padding: 30px;
-        border-radius: 20px;
-        border: 1px solid rgba(0,74,173,0.05);
-        position: sticky;
-        top: 20px;
-    }
-
-    .stat-row {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 15px 0;
-        border-bottom: 1px solid #e2e8f0;
-    }
-
-    .stat-label { font-weight: 600; color: var(--text-muted); }
-    .stat-value { font-weight: 800; color: var(--primary); font-size: 1.2rem; }
-
-    /* ===== BUTTONS ===== */
-    .action-group {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-        margin-top: 25px;
-    }
-
-    .btn-main {
-        padding: 15px;
-        border-radius: 12px;
-        text-align: center;
-        text-decoration: none;
-        font-weight: 700;
-        transition: all 0.3s ease;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 10px;
-        border: none;
-        cursor: pointer;
-    }
-
-    .btn-view-majors { background: var(--primary); color: white; }
-    .btn-view-majors:hover { background: var(--primary-light); transform: translateY(-3px); }
-
-    .btn-fav { 
-        background: white; 
-        color: #ff4d4d; 
-        border: 2px solid #ff4d4d; 
-    }
-    .btn-fav.active { background: #ff4d4d; color: white; }
-
-    @media (max-width: 850px) {
-        .college-grid { grid-template-columns: 1fr; }
-    }
-</style>
-
-<div class="container" style="max-width: 1050px; margin: 30px auto;">
-
-    <div class="college-hero">
+    <div class="detail-hero">
         {% if college.image %}
             <img src="{{ college.image.url }}" alt="{{ college.name }}">
         {% elif college.university.image %}
             <img src="{{ college.university.image.url }}" alt="{{ college.university.name }}">
         {% else %}
-            <div style="width:100%; height:100%; background:#ddd;"></div>
+            <div class="card-media-fallback" aria-hidden="true">🏫</div>
         {% endif %}
-
-        <div class="hero-overlay">
-            <div class="glass-breadcrumb">
+        <div class="detail-hero-overlay">
+            <div class="glass-crumb">
                 <a href="{% url 'university' college.university.id %}">{{ college.university.name }}</a>
-                <span>/</span>
-                <span style="color: white; font-weight: 500;">{{ college.name }}</span>
+                <span class="sep" aria-hidden="true">/</span>
+                <span>{{ college.name }}</span>
             </div>
             <h1>{{ college.name }}</h1>
         </div>
     </div>
 
-    <div class="college-grid">
-        
-        <div class="info-card">
-            <h2>🏫 Faculty Overview</h2>
-            <div class="college-desc">
-                {{ college.description|linebreaks }}
+    <div class="grid-2">
+        <div class="surface-card">
+            <h2><span aria-hidden="true">🏫</span> Faculty overview</h2>
+            <div class="long-text">
+                {{ college.description|linebreaks|default:"No description available yet." }}
             </div>
         </div>
 
-        <div class="sidebar-card">
-            <h2>📊 Quick Info</h2>
-            
+        <aside class="sidebar-card">
+            <h2><span aria-hidden="true">📋</span> Quick info</h2>
+
             <div class="stat-row">
-                <span class="stat-label">Available Majors</span>
-                <span class="stat-value">{{ college.majors.count }}</span>
+                <span class="stat-row-label">Available majors</span>
+                <span class="stat-row-value">{{ college.majors.count }}</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-row-label">University</span>
+                <span class="stat-row-value" style="font-size: var(--text-sm); text-align: right;">{{ college.university.name }}</span>
             </div>
 
-            <div class="stat-row" style="border: none;">
-                <span class="stat-label">University</span>
-                <span style="font-weight: 600; font-size: 0.9rem; text-align: right;">{{ college.university.name }}</span>
-            </div>
-
-            <div class="action-group">
-                <a href="{% url 'majors' college.id %}" class="btn-main btn-view-majors">
-                    Browse Majors 🎓
+            <div class="action-stack">
+                <a href="{% url 'majors' college.id %}" class="btn btn-primary">
+                    Browse majors
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                         stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
                 </a>
 
                 {% if user.is_authenticated %}
                     <form action="{% url 'toggle_favorite_college' college.id %}" method="POST">
                         {% csrf_token %}
-                        <button type="submit" class="btn-main btn-fav {% if is_favorite %}active{% endif %}" style="width: 100%;">
+                        <button type="submit" class="btn btn-block {% if is_favorite %}btn-fav-active{% else %}btn-danger-outline{% endif %}">
                             {% if is_favorite %}
-                                ❤️ Saved to Favorites
+                                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                                </svg>
+                                Saved
                             {% else %}
-                                🤍 Add Favorite
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                                </svg>
+                                Add favourite
                             {% endif %}
                         </button>
                     </form>
                 {% else %}
-                    <a href="{% url 'login' %}" class="btn-main btn-fav" style="font-size: 0.9rem;">
-                        Login to Favorite ❤️
-                    </a>
+                    <a href="{% url 'login' %}" class="btn btn-danger-outline btn-block">Login to save</a>
                 {% endif %}
             </div>
-        </div>
-
+        </aside>
     </div>
 </div>
-{% endblock content %}
+{% endblock %}
